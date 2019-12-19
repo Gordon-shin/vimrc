@@ -1,0 +1,10 @@
+# Insert your preferred key mappings here.
+
+map k scrollDown
+map j scrollLeft
+map i scrollUp
+map J previousTab
+map L nextTab
+map I goForward
+map K goBack
+map h i
