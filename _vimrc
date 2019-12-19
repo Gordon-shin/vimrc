@@ -1,3 +1,4 @@
+let mapleader=" "
 syntax on
 "=================================================================================================== 
 " vimplug                                                                                               map S :w<CR>
@@ -6,16 +7,43 @@ syntax on
 call plug#begin('D:\software\Vim\vim81\plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
-Plug 'scrooloose/nerdtree'
 Plug 'Valloric/YouCompleteMe'
+"主题设置
 call plug#end()
 color snazzy
-map <C-n> :NERDTreeToggle<CR>
+"nerdtree
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
+" HTML, CSS, JavaScript, PHP, JSON, etc.
+Plug 'elzr/vim-json'
+Plug 'hail2u/vim-css3-syntax'
+Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
+Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
+Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
+Plug 'mattn/emmet-vim'
+" Python
+Plug 'vim-scripts/indentpython.vim'
+" Plug 'vim-python/python-syntax', { 'for' :['python', 'vim-plug'] }
+
+" Markdown
+Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
+
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+Plug 'vimwiki/vimwiki'
+
+" For general writing
+Plug 'reedes/vim-wordy'
+Plug 'ron89/thesaurus_query.vim'
+
+map tt :NERDTreeToggle<CR>
 "let g:SnazzyTransparent = 1 "snazzy 透明
 
 
 "===================================================================================================                 
 "去掉选项单
+"ctrl+o 回到上次浏览的地方
+"ctrl+i 同上
 "===================================================================================================     
 "                                                                                                                    
 
@@ -46,16 +74,36 @@ endif
 "===================================================================================================                  
 " 普通选项                                                                                                          
 
+
 "===================================================================================================                  
+noremap h i
+noremap j h
+noremap k j
+noremap i k
+
 map Q :q<CR>
+
 map S :w<CR>
 map . :bn<CR>
 map , :bp<CR>
-map si :set splitright<CR>:vsplit<CR>
+map sd :set splitright<CR>:vsplit<CR>
+map sa :set nosplitright<CR>:vsplit<CR>
+map sw :set nosplitbelow<CR>:split<CR>
+map ss :set splitbelow<CR>:split<CR>
+
+map <LEADER><CR> :nohlsearch<CR> 
+map <LEADER>i <C-w>k
+map <LEADER>j <C-w>h
+map <LEADER>k <C-w>j
+map <LEADER>l <C-w>l
+map = $
+map - 0
+
 
 set foldmethod=indent
 set tabstop=2
 set magic
+set scrolloff=5  "让屏幕上下至少保有5行
 set number
 set relativenumber
 set cursorline
