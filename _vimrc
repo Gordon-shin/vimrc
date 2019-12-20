@@ -10,11 +10,9 @@ Plug 'connorholyday/vim-snazzy'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'Valloric/YouCompleteMe'
 "主题设置
-call plug#end()
-color snazzy
 "nerdtree
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
@@ -40,7 +38,9 @@ Plug 'ron89/thesaurus_query.vim'
 map tt :NERDTreeToggle<CR>
 "let g:SnazzyTransparent = 1 "snazzy 透明
 
+call plug#end()
 
+color snazzy
 "===================================================================================================                 
 "去掉选项单
 "ctrl+o 回到上次浏览的地方
@@ -64,15 +64,9 @@ inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-inoremap <expr> <LEADER> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-
-
-
-
-
-
+inoremap <expr> <tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 
 
@@ -83,6 +77,9 @@ inoremap <expr> <LEADER> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 "nmap <silent> gi <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 "nmap <leader>rn <Plug>(coc-rename)
+
+
+let NERDTreeMapOpenSplit='\hh'
 
 if (has("gui_running"))
     set lines=55
