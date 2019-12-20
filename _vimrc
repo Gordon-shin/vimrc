@@ -8,6 +8,7 @@ call plug#begin('D:\software\Vim\vim81\plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'morhetz/gruvbox'
 "Plug 'Valloric/YouCompleteMe'
 "主题设置
 "nerdtree
@@ -40,7 +41,8 @@ map tt :NERDTreeToggle<CR>
 
 call plug#end()
 
-color snazzy
+"color snazzy
+color gruvbox
 "===================================================================================================                 
 "去掉选项单
 "ctrl+o 回到上次浏览的地方
