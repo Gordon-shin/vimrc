@@ -22,6 +22,7 @@ Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'mattn/emmet-vim'
+Plug 'docunext/closetag.vim'
 " Python
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax', { 'for' :['python', 'vim-plug'] }
@@ -117,6 +118,7 @@ noremap i k
 
 map Q :q<CR>
 
+map <LEADER>r :source ~/_vimrc<CR>
 map S :w<CR>
 map . :bn<CR>
 map , :bp<CR>
@@ -130,6 +132,15 @@ map <LEADER>i <C-w>k
 map <LEADER>j <C-w>h
 map <LEADER>k <C-w>j
 map <LEADER>l <C-w>l
+
+map tg :tabe<CR>
+map tr :-tabnext<CR>
+map ty :+tabnext<CR>
+
+map <LEADER><up> :res +5<CR>
+map <LEADER><down> :res -5<CR>
+map <LEADER><left> :vertical resize-5<CR>
+map <LEADER><right> :vertical resize+5<CR>
 map = $
 map - 0
 
