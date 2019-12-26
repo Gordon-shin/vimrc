@@ -4,7 +4,7 @@ syntax on
 " vimplug                                                                                               map S :w<CR>
 "=================================================================================================== map s <nop>
 "
-call plug#begin('D:\software\Vim\vim81\plugged')
+call plug#begin('D:\software\Vim\plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'connorholyday/vim-snazzy'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -12,6 +12,7 @@ Plug 'morhetz/gruvbox'
 "Plug 'Valloric/YouCompleteMe'
 "主题设置
 "nerdtree
+Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/nerdtree'
 "Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'ctrlpvim/ctrlp.vim', { 'on': 'CtrlP' }
@@ -22,7 +23,6 @@ Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'mattn/emmet-vim'
-Plug 'docunext/closetag.vim'
 " Python
 Plug 'vim-scripts/indentpython.vim'
 Plug 'vim-python/python-syntax', { 'for' :['python', 'vim-plug'] }
@@ -36,6 +36,8 @@ Plug 'vimwiki/vimwiki'
 " For general writing
 Plug 'reedes/vim-wordy'
 Plug 'ron89/thesaurus_query.vim'
+
+
 
 map tt :NERDTreeToggle<CR>
 "let g:SnazzyTransparent = 1 "snazzy 透明
@@ -84,10 +86,38 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 let NERDTreeMapOpenSplit='\hh'
 
+"一键编译
+map r :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+  exec "w"
+  if &filetype == 'c'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'cpp'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'java'
+    exec "!javac %"
+    exec "!time java %<"
+  elseif &filetype == 'sh'
+    :! bash %
+  elseif &filetype == 'python'
+    silent! exec "!clear"
+    exec "! python %"
+  elseif &filetype == 'html'
+    exec "!chrome % &"
+  elseif &filetype == 'markdown'
+    exec "MarkdownPreview"
+  elseif &filetype == 'vimwiki'
+    exec "MarkdownPreview"
+  endif
+endfunc
+
 if (has("gui_running"))
     set lines=55
     set columns=120
     set guioptions=
+    set guioptions+=a  "gui右键复制
     set clipboard+=unnamed
     set guitablabel=%t\ %M
     language messages en
@@ -104,7 +134,7 @@ if (has("gui_running"))
         silent execute "q"
     endif
 else
-    autocmd BufRead,TabEnter * set mouse=
+   autocmd BufRead,TabEnter * set mouse=
 endif
 "===================================================================================================                  
 " 普通选项                                                                                                          
@@ -116,8 +146,11 @@ noremap j h
 noremap k j
 noremap i k
 
+noremap H I
+if has('mouse') 
+	set mouse-=a
+endif 
 map Q :q<CR>
-
 map <LEADER>r :source ~/_vimrc<CR>
 map S :w<CR>
 map . :bn<CR>
@@ -132,6 +165,8 @@ map <LEADER>i <C-w>k
 map <LEADER>j <C-w>h
 map <LEADER>k <C-w>j
 map <LEADER>l <C-w>l
+map = $
+map - 0
 
 map tg :tabe<CR>
 map tr :-tabnext<CR>
@@ -141,9 +176,6 @@ map <LEADER><up> :res +5<CR>
 map <LEADER><down> :res -5<CR>
 map <LEADER><left> :vertical resize-5<CR>
 map <LEADER><right> :vertical resize+5<CR>
-map = $
-map - 0
-
 
 set foldmethod=indent
 set tabstop=2
