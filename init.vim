@@ -1,5 +1,5 @@
 "Setup ===
-" ====ý.================
+" ===================
 "
 "  ===
 "  === System
@@ -144,6 +144,8 @@ noremap <LEADER>sc :set spell!<CR>
 " find and replace
 noremap \s :%s//g<left><left>
 
+" Press space twice to jump to the next '<++>' and edit it
+noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " ===
 " === Install Plugins with Vim-Plug
@@ -154,9 +156,14 @@ call plug#begin('D:\software\Vimplugged')
 "gruvbox theme
 Plug 'morhetz/gruvbox'
 
+"deus theme
+Plug 'ajmwagar/vim-deus'
+
 " Pretty Dress
-Plug 'theniceboy/eleline.vim'
+"Plug 'theniceboy/eleline.vim'
 Plug 'bling/vim-bufferline'
+"Plug 'vim-airline/vim-airline' 
+Plug 'liuchengxu/eleline.vim'
 
 " For general writing
 Plug 'reedes/vim-wordy'
@@ -230,6 +237,9 @@ Plug 'osyo-manga/vim-anzu'
 "Plug 'liuchengxu/vim-clap'
 "Plug 'jceb/vim-orgmode'
 Plug 'mhinz/vim-startify'
+ 
+" Formatter
+Plug 'Chiel92/vim-autoformat'
 
 " Vim Applications
 Plug 'itchyny/calendar.vim'
@@ -258,7 +268,7 @@ call plug#end()
 "===
 
 "theme choose
-color gruvbox
+color deus
 
 "nerdtree
 
@@ -414,8 +424,105 @@ endfunc
 " ===
 noremap <LEADER>f :F  %<left><left>
 
+" ===
+" === AutoFormat
+" ===
+nnoremap \f :Autoformat<CR>
+
+" ===
+" === vim-table-mode
+" ===
+noremap <LEADER>tm :TableModeToggle<CR>
+"let g:table_mode_disable_mappings = 1
+let g:table_mode_cell_text_object_i_map = 'k<Bar>'
+
+" Bullets.vim
+"
+let g:bullets_enabled_file_types = [
+    \ 'markdown',
+    \ 'text',
+    \ 'gitcommit',
+    \ 'scratch'
+    \]
+
+" ===
+" === Vista.vim
+" ===
+noremap <silent> T :Vista!!<CR>
+"noremap <silent> <C-t> :Vista finder<CR>
+function! NearestMethodOrFunction() abort
+	return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+
+set statusline+=%{NearestMethodOrFunction()}
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+" e.g., more compact: ["▸ ", ""]
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+"let g:vista_default_executive = 'ctags'
+" To enable fzf's preview window set g:vista_fzf_preview.
+" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" For example:
+"let g:vista_fzf_preview = ['right:50%']
+"
+" ===
+" === OmniSharp
+" ===
+let g:OmniSharp_typeLookupInPreview = 1
+let g:omnicomplete_fetch_full_documentation = 1
+
+let g:OmniSharp_server_use_mono = 1
+let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_highlight_types = 2
+let g:OmniSharp_selector_ui = 'ctrlp'
+
+autocmd Filetype cs nnoremap <buffer> gd :OmniSharpPreviewDefinition<CR>
+autocmd Filetype cs nnoremap <buffer> gr :OmniSharpFindUsages<CR>
+autocmd Filetype cs nnoremap <buffer> gy :OmniSharpTypeLookup<CR>
+autocmd Filetype cs nnoremap <buffer> ga :OmniSharpGetCodeActions<CR>
+autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +5<CR>
+
+sign define OmniSharpCodeActions text=💡
+
+augroup OSCountCodeActions
+	autocmd!
+	autocmd FileType cs set signcolumn=yes
+	autocmd CursorHold *.cs call OSCountCodeActions()
+augroup END
+
+function! OSCountCodeActions() abort
+	if bufname('%') ==# '' || OmniSharp#FugitiveCheck() | return | endif
+	if !OmniSharp#IsServerRunning() | return | endif
+	let opts = {
+				\ 'CallbackCount': function('s:CBReturnCount'),
+				\ 'CallbackCleanup': {-> execute('sign unplace 99')}
+				\}
+	call OmniSharp#CountCodeActions(opts)
+endfunction
+
+function! s:CBReturnCount(count) abort
+	if a:count
+		let l = getpos('.')[1]
+		let f = expand('%:p')
+		execute ':sign place 99 line='.l.' name=OmniSharpCodeActions file='.f
+	endif
+endfunction
+
+" ==
+" == vim-multiple-cursor
+" ==
+let g:multi_cursor_use_default_mapping=0
+let g:multi_cursor_start_word_key = '<c-k>'
+let g:multi_cursor_select_all_word_key = '<a-k>'
+let g:multi_cursor_start_key = 'g<c-k>'
+let g:multi_cursor_select_all_key = 'g<a-k>'
+let g:multi_cursor_next_key = '<c-k>'
+let g:multi_cursor_prev_key = '<c-p>'
+let g:multi_cursor_skip_key = '<C-s>'
+let g:multi_cursor_quit_key = '<Esc>'
+
+"it must put on the end of config file.
 if(exists('g:GuiLoaded'))
 	GuiPopupmenu 0
 	GuiTabline 0
 endif
-
