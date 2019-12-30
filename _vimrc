@@ -237,9 +237,6 @@ Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 Plug 'easymotion/vim-easymotion'
 Plug 'Konfekt/FastFold'
 
-" Python indent (follows the PEP8 style)
-Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
-
 " Find & Replace
 Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 Plug 'osyo-manga/vim-anzu'
