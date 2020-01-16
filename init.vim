@@ -4,16 +4,32 @@
 "  ===
 "  === System
 "  ===
+"
 set clipboard=unnamed
 set encoding=utf-8
-set fileencoding=utf-8
+"set fileencoding=utf-8
 set termencoding=utf-8
 set mouse=a
 let &t_ut=''
 
+syntax on
 set autochdir
 set number
 set relativenumber
+set cursorline
+set wrap
+set indentexpr=
+set foldmethod=indent
+set foldlevel=99
+set foldenable
+set splitbelow
+set showcmd
+set wildmenu
+set ignorecase
+set smartcase
+set ttyfast
+set visualbell
+set inccommand=split
 " ===
 " === Basic Mappings
 " ===
@@ -156,14 +172,24 @@ call plug#begin('D:\software\Vimplugged')
 "gruvbox theme
 Plug 'morhetz/gruvbox'
 
+"
+if has('nvim')
+"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 "deus theme
 Plug 'ajmwagar/vim-deus'
-
+"neovim 
+Plug 'beeender/Comrade'
 " Pretty Dress
 "Plug 'theniceboy/eleline.vim'
-Plug 'bling/vim-bufferline'
-"Plug 'vim-airline/vim-airline' 
-Plug 'liuchengxu/eleline.vim'
+"Plug 'bling/vim-bufferline'
+Plug 'vim-airline/vim-airline' 
+Plug 'vim-airline/vim-airline-themes'
+"Plug 'liuchengxu/eleline.vim'
 
 " For general writing
 Plug 'reedes/vim-wordy'
@@ -222,9 +248,6 @@ Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 Plug 'easymotion/vim-easymotion'
 Plug 'Konfekt/FastFold'
 
-" Python indent (follows the PEP8 style)
-Plug 'Vimjas/vim-python-pep8-indent', {'for': 'python'}
-
 " Find & Replace
 Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 Plug 'osyo-manga/vim-anzu'
@@ -274,36 +297,6 @@ color deus
 
 map tt :NERDTreeToggle<CR>
 
-"gui openning settings
-if (has("gui_running"))
-	" Open	Windows size
-	set lines=65 
-	set columns=158
-	set guioptions=
-	set guioptions+=a
-	winpos 700 75
-
-	autocmd GUIEnter * set visualbell t_vb=
-	autocmd BufRead,TabEnter * let &titlestring=expand("%:p")
-	if (has("win32"))
-		source $VIMRUNTIME/delmenu.vim
-		source $VIMRUNTIME/menu.vim
-	endif
-	if argc() == 1
-		silent execute '!start gvim --servername vimer --remote-tab-silent "'.argv(0).'"'
-		call remote_foreground("vimer")
-		silent execute "q"
-	endif
-else
-	" autocmd BufRead,TabEnter * set mouse=
-	" This is console Vim.
-	if exists("+lines")
-		set lines=50
-	endif
-	if exists("+columns")
-		set columns=100
-	endif
-endif
 
 " ===
 " === Ranger.vim
@@ -318,7 +311,7 @@ let NERDTreeMapOpenSplit='\hh'
 
 "coc Settings
 " fix the most annoying bug that coc has
-silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
+"silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
 let g:coc_global_extensions = ['coc-python', 'coc-vimlsp', 'coc-html', 'coc-json', 'coc-css', 'coc-tsserver', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-vimlsp', 'coc-tailwindcss', 'coc-stylelint']
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " use <tab> for trigger completion and navigate to the next complete item
@@ -333,14 +326,14 @@ inoremap <silent><expr> <Tab>
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <silent><expr> <c-space> coc#refresh()
 " Useful commands
-nnoremap <silý.ent> <space>y :<C-u>CocList -A --normal yank<cr>
+nnoremap <silent> <space>y :<C-u>CocList -A --normal yank<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 nmap <leader>rn <Plug>(coc-rename)
 
-"ä¸é®ç¼è¯
+"onclick to compile
 map r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
   exec "w"
@@ -358,8 +351,8 @@ func! CompileRunGcc()
   elseif &filetype == 'python'
     silent! exec "!clear"
     exec "! python %"
-  elseif &filetype == 'html'
-    exec "!chrome % &"
+ " elseif &filetype == 'html'
+ "   exec "!chrome % &"
   elseif &filetype == 'markdown'
     exec "MarkdownPreview"
   elseif &filetype == 'vimwiki'
@@ -455,7 +448,7 @@ function! NearestMethodOrFunction() abort
 endfunction
 
 set statusline+=%{NearestMethodOrFunction()}
-autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+"autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 
 " e.g., more compact: ["▸ ", ""]
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
@@ -493,6 +486,7 @@ augroup END
 function! OSCountCodeActions() abort
 	if bufname('%') ==# '' || OmniSharp#FugitiveCheck() | return | endif
 	if !OmniSharp#IsServerRunning() | return | endif
+
 	let opts = {
 				\ 'CallbackCount': function('s:CBReturnCount'),
 				\ 'CallbackCleanup': {-> execute('sign unplace 99')}
@@ -521,8 +515,5 @@ let g:multi_cursor_prev_key = '<c-p>'
 let g:multi_cursor_skip_key = '<C-s>'
 let g:multi_cursor_quit_key = '<Esc>'
 
-"it must put on the end of config file.
-if(exists('g:GuiLoaded'))
-	GuiPopupmenu 0
-	GuiTabline 0
-endif
+"let g:deoplete#enable_at_startup = 1
+let g:airline_powerline_fonts = 1
