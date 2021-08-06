@@ -11,8 +11,8 @@ set encoding=utf-8
 set termencoding=utf-8
 set mouse=a
 let &t_ut=''
-
-syntax on
+"python3 location:
+"let g:python3_host_prog = c:/python3
 set autochdir
 set number
 set relativenumber
@@ -30,12 +30,17 @@ set smartcase
 set ttyfast
 set visualbell
 set inccommand=split
+
 " ===
 " === Basic Mappings
 " ===
 " Set <LEADER> as <SPACE>, ; as :
 let mapleader=" "
 noremap ; :
+
+"windows shift insert
+cmap <S-Insert>  <C-R>+
+
 
 " Save & quit
 noremap Q :q<CR>
@@ -160,35 +165,30 @@ noremap <LEADER>sc :set spell!<CR>
 " find and replace
 noremap \s :%s//g<left><left>
 
-" Press space twice to jump to the next '<++>' and edit it
+" Press space twice to jump to the next '' and edit it
 noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " ===
 " === Install Plugins with Vim-Plug
 " ===
 
-call plug#begin('D:\software\Vimplugged')
+call plug#begin('~/.config/nvim/plugged')
 
+Plug 'ayu-theme/ayu-vim' " or other package manager
 "gruvbox theme
 Plug 'morhetz/gruvbox'
+"Neovim idea plugin
+Plug 'beeender/Comrade'
 
-"
-if has('nvim')
-"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 "deus theme
 Plug 'ajmwagar/vim-deus'
-"neovim 
-Plug 'beeender/Comrade'
+"deoplete
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+
 " Pretty Dress
-"Plug 'theniceboy/eleline.vim'
-"Plug 'bling/vim-bufferline'
-Plug 'vim-airline/vim-airline' 
-Plug 'vim-airline/vim-airline-themes'
+Plug 'theniceboy/eleline.vim'
+Plug 'bling/vim-bufferline'
+"Plug 'vim-airline/vim-airline' 
 "Plug 'liuchengxu/eleline.vim'
 
 " For general writing
@@ -196,12 +196,16 @@ Plug 'reedes/vim-wordy'
 Plug 'ron89/thesaurus_query.vim'
 
 "File navigation
-Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree'
-"Plug 'francoiscabrol/ranger.vim' windows is unusable
+Plug 'francoiscabrol/ranger.vim'
+"windows is unusable
 
 "Auto Complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+"FZF quick search
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() },'on':['Files', 'History', 'Colors', 'Rg', 'Marks'] }
+Plug 'junegunn/fzf.vim', {'on':['Files', 'History', 'Colors', 'Rg', 'Marks']}
 
 
 " CSharp
@@ -280,7 +284,7 @@ Plug 'roxma/nvim-yarp'
 Plug 'rbgrouleff/bclose.vim' " For ranger.vim
 
 " Error checking
-Plug 'dense-analysis/ale'
+"Plug 'dense-analysis/ale'
 Plug 'fszymanski/fzf-quickfix', {'on': 'Quickfix'}
 
 call plug#end()
@@ -289,9 +293,14 @@ call plug#end()
 "===
 "=== Plugins Settings
 "===
+" ayu color setting
+set termguicolors     " enable true colors support
+let ayucolor="light"  " for light version of theme
+
+colorscheme ayu
 
 "theme choose
-color deus
+"color deus
 
 "nerdtree
 
@@ -301,8 +310,8 @@ map tt :NERDTreeToggle<CR>
 " ===
 " === Ranger.vim
 " ===
-"nnoremap R :Ranger<CR>
-"let g:ranger_map_keys = 0
+nnoremap R :Ranger<CR>
+let g:ranger_map_keys = 0
 
 "===
 "===Nerdtree Settings
@@ -311,7 +320,7 @@ let NERDTreeMapOpenSplit='\hh'
 
 "coc Settings
 " fix the most annoying bug that coc has
-"silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
+silent! au BufEnter,BufRead,BufNewFile * silent! unmap if
 let g:coc_global_extensions = ['coc-python', 'coc-vimlsp', 'coc-html', 'coc-json', 'coc-css', 'coc-tsserver', 'coc-yank', 'coc-lists', 'coc-gitignore', 'coc-vimlsp', 'coc-tailwindcss', 'coc-stylelint']
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " use <tab> for trigger completion and navigate to the next complete item
@@ -350,9 +359,9 @@ func! CompileRunGcc()
     :! bash %
   elseif &filetype == 'python'
     silent! exec "!clear"
-    exec "! python %"
- " elseif &filetype == 'html'
- "   exec "!chrome % &"
+    exec "! pythonwin %"
+  elseif &filetype == 'html'
+    exec "!chrome % &"
   elseif &filetype == 'markdown'
     exec "MarkdownPreview"
   elseif &filetype == 'vimwiki'
@@ -486,7 +495,6 @@ augroup END
 function! OSCountCodeActions() abort
 	if bufname('%') ==# '' || OmniSharp#FugitiveCheck() | return | endif
 	if !OmniSharp#IsServerRunning() | return | endif
-
 	let opts = {
 				\ 'CallbackCount': function('s:CBReturnCount'),
 				\ 'CallbackCleanup': {-> execute('sign unplace 99')}
@@ -515,5 +523,68 @@ let g:multi_cursor_prev_key = '<c-p>'
 let g:multi_cursor_skip_key = '<C-s>'
 let g:multi_cursor_quit_key = '<Esc>'
 
-"let g:deoplete#enable_at_startup = 1
-let g:airline_powerline_fonts = 1
+
+"FZF模糊搜索设置
+" nmap <C-z> :<C-u>SessionSave<CR>
+" nmap <C-x> :<C-u>SessionLoad<CR>
+" nnoremap <silent> <C-h> :History<CR>
+" nnoremap <silent> <C-p> :Files<CR>
+" nnoremap <silent> <C-t> :Colors<CR>
+" nnoremap <silent> <C-f> :Rg<CR>
+" nnoremap <silent> <C-m> :Marks<CR>
+
+nmap <Leader>ss :<C-u>SessionSave<CR>
+nmap <Leader>sl :<C-u>SessionLoad<CR>
+nmap <Leader>cn :<C-u>DashboardNewFile<CR>
+nnoremap <silent> <Leader>fh :History<CR>
+nnoremap <silent> <Leader>ff :Files<CR>
+nnoremap <silent> <Leader>tc :Colors<CR>
+nnoremap <silent> <Leader>fa :Rg<CR>
+nnoremap <silent> <Leader>fb :Marks<CR>
+
+let g:fzf_preview_window = ''
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+function! s:list_buffers()
+	redir => list
+	silent ls
+	redir END
+	return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+	execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+			\ 'source': s:list_buffers(),
+			\ 'sink*': { lines -> s:delete_buffers(lines) },
+			\ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+			\ }))
+
+noremap <c-c> :BD<CR>
+
+let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.6 } }
+
+
+"copymatches
+"
+function! CopyMatches(reg)
+  let hits = []
+  %s//\=len(add(hits, submatch(0))) ? submatch(0) : ''/gne
+  let reg = empty(a:reg) ? '+' : a:reg
+  execute 'let @'.reg.' = join(hits, "\n") . "\n"'
+endfunction
+command! -register CopyMatches call CopyMatches(<q-reg>)
+
+"Vim-buffet设置
+nmap <leader>1 <Plug>BuffetSwitch(1)
+nmap <leader>2 <Plug>BuffetSwitch(2)
+nmap <leader>3 <Plug>BuffetSwitch(3)
+nmap <leader>4 <Plug>BuffetSwitch(4)
+nmap <leader>5 <Plug>BuffetSwitch(5)
+nmap <leader>6 <Plug>BuffetSwitch(6)
+nmap <leader>7 <Plug>BuffetSwitch(7)
+nmap <leader>8 <Plug>BuffetSwitch(8)
+nmap <leader>9 <Plug>BuffetSwitch(9)
+nmap <leader>0 <Plug>BuffetSwitch(10)
